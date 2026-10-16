@@ -1,6 +1,3 @@
-<p align="center">
-  <img src="assets/banner.jpg" alt="Quran Recitation Verse Identifier" width="100%" style="border-radius: 12px; max-width: 900px;" />
-</p>
 
 <h1 align="center">Quran Recitation Verse Identifier (Recitation Shazam)</h1>
 
