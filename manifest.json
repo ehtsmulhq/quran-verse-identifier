@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Quran Verse Identifier - Recitation Shazam",
+  "version": "1.0.0",
+  "description": "Instant Quran recitation identifier for browser video streams and microphone using Google Gemini and Quran.com",
+  "icons": {
+    "16": "assets/icons/icon-16.png",
+    "32": "assets/icons/icon-32.png",
+    "48": "assets/icons/icon-48.png",
+    "128": "assets/icons/icon-128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "tabCapture",
+    "offscreen",
+    "storage",
+    "scripting"
+  ],
+  "action": {
+    "default_title": "Identify Quran Verse (Alt+Q)",
+    "default_icon": {
+      "16": "assets/icons/icon-16.png",
+      "32": "assets/icons/icon-32.png",
+      "48": "assets/icons/icon-48.png",
+      "128": "assets/icons/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "identify-recitation": {
+      "suggested_key": {
+        "default": "Alt+Q"
+      },
+      "description": "Identify Quran recitation in active tab"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/ui/*",
+        "src/offscreen/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
