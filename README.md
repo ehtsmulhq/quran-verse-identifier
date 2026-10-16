@@ -27,9 +27,9 @@
 ## 📖 Overview
 
 **Quran Verse Identifier** is a browser extension that functions as a "Shazam for the Quran." Whenever a Quran recitation is playing inside any browser tab—such as **YouTube, YouTube Shorts, Instagram Reels, Facebook, TikTok, podcasts**, or even **live ambient room audio via microphone**—a single shortcut (<kbd>Alt</kbd> + <kbd>Q</kbd>) instantly captures, identifies, and enriches the recitation.
---
+
 Results are displayed in a sleek, draggable **Floating HUD** that renders authentic **Uthmani Arabic calligraphy**, verified translations in 13+ languages, **live continuous Ayah tracking**, and **simplified classical Tafsir reflections** with voice narration.
----
+
 
 ## ✨ Key Features
 
