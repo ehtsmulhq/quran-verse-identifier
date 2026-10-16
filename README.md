@@ -1,236 +1,284 @@
-# Quran Recitation Verse Identifier (Recitation Shazam) 📖✨
+<p align="center">
+  <img src="assets/banner.jpg" alt="Quran Recitation Verse Identifier" width="100%" style="border-radius: 12px; max-width: 900px;" />
+</p>
 
-> Instant, accurate Quran recitation identifier, live Ayah-by-Ayah follower, and multi-source classical Tafsir synthesizer for browser video streams (YouTube, Shorts, Instagram Reels, Facebook Reels, TikTok) and live ambient room recitations using **Google Gemini 3.8 Flash Live / 3.8 Flash** and **Quran.com REST API v4**.
+<h1 align="center">Quran Recitation Verse Identifier (Recitation Shazam)</h1>
 
-Built strictly with **Chrome Manifest V3**, featuring a non-intrusive draggable **Shadow DOM Floating HUD**, **unmuted AudioContext pass-through**, and zero external build step dependencies.
+<p align="center">
+  <strong>Instant Quran recitation identification, live Ayah-by-Ayah streaming, and multi-source classical Tafsir synthesis for Google Chrome.</strong>
+</p>
 
----
+<p align="center">
+  <a href="https://developer.chrome.com/docs/extensions/mv3/"><img src="https://img.shields.io/badge/Manifest-V3-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Manifest V3" /></a>
+  <a href="https://ai.google.dev/"><img src="https://img.shields.io/badge/AI-Gemini%203.8%20Flash%20Live-1a73e8?style=for-the-badge&logo=google&logoColor=white" alt="Gemini AI" /></a>
+  <a href="https://quran.com"><img src="https://img.shields.io/badge/API-Quran.com%20v4-10b981?style=for-the-badge" alt="Quran.com API" /></a>
+  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Tests-126%20Passing-22c55e?style=for-the-badge&logo=vitest&logoColor=white" alt="Vitest Tests" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License: MIT" /></a>
+</p>
 
-## 🌟 Features
-
-- 🎯 **Instant Seek Identification**:
-  - **Direct Multimodal Audio Recognition**: Uses Google Gemini to identify the exact Surah and Ayah directly from audio waveforms without reciter bias or restrictive context locks.
-  - **Authentic Uthmani Script**: Automatically enriches recognized verses with verified Uthmani calligraphy, verse keys, and translations from the Quran.com API v4.
-  - **Graceful Search Fallback**: Automatically recovers verse boundaries via Quran.com search if verse numbering is omitted.
-
-- 🌊 **Continuous Ayah-by-Ayah Live Streaming**:
-  - Powered by **Google Gemini 3.8 Flash Live** (`models/gemini-3.8-live`) via bidirectional WebSockets (`BidiGenerateContent`).
-  - Streams 16kHz linear 16-bit PCM audio in real time while **keeping tab audio unmuted** for the user.
-  - Seamlessly tracks recitations verse-by-verse as the Qari continues reciting.
-
-- 📖 **Multi-Source Classical Tafsir & Reflections**:
-  - Concurrently ingests 3 classical commentaries from Quran.com API v4:
-    - **Ibn Kathir** (Resource ID `169`)
-    - **Ma'arif al-Qur'an** (Resource ID `168`)
-    - **Tazkirul Quran** (Resource ID `817`)
-  - Synthesizes easy-to-understand explanations with relatable stories and everyday analogies for normal readers across 3 selectable depths:
-    - **⚡ 60–90s Quick**: Everyday analogy or vivid story, spoken pace (~120–160 words).
-    - **📖 Detailed**: Context of revelation (*Asbab al-Nuzul*), core themes, practical guidance (~250–350 words).
-    - **🏛️ Comprehensive Study**: In-depth comparison of Ibn Kathir, Ma'arif al-Qur'an, and Tazkirul Quran insights (~450–600 words).
-  - **Read & Hear Modes**:
-    - **Read View**: Integrated expandable drawer directly inside the on-page floating HUD.
-    - **Hear View**: Built-in Web Speech API TTS player with Play/Pause and speed controls (`1x`, `1.25x`, `1.5x`).
-  - **Decoupled Reading State**: An open Tafsir view or active speech session remains pinned to verse $N$ even as live recitation advances to $N+1$, with an intuitive `"Live is at {surah}:{ayah} [Switch]"` sync pill.
-  - **Classical Deep-Link**: Direct one-click redirect to `https://quran.com/{surah}/{ayah}/tafsirs` for users wishing to consult the unabridged classical Arabic/English volumes.
-
-- 🎧 **Dual Input Audio Capture**:
-  - **Tab Audio Mode**: High-fidelity internal audio stream capture from active browser tabs (`chrome.tabCapture`) with AudioContext loopback so your video audio never mutes.
-  - **Microphone Mode**: Capture live room recitations, Taraweeh prayers, lectures, or external speaker recitations with a single toggle.
-
-- 🎨 **Floating Shadow DOM HUD**:
-  - Injected directly into the active tab within an isolated Shadow DOM (`#quran-verse-hud-root`) to guarantee zero CSS interference with the host website.
-  - Fully draggable anywhere on the screen with bounds clamping.
-  - Minimizable to an ambient pill when you want to continue watching without obstruction.
-  - One-click copy for Arabic verse and translation text.
-
-- ⚙️ **Configurable Model & Settings**:
-  - Configure your own free Gemini API key from Google AI Studio.
-  - Choose between Gemini models (`gemini-3.8-flash`, `gemini-2.5-flash`, `gemini-2.0-flash`, `gemini-1.5-flash`).
-  - Select from 13+ global translations (English, Bengali, Urdu, Indonesian, French, Turkish, etc.).
-
-- ⌨️ **Keyboard Shortcut `Alt+Q`**:
-  - Trigger instant recognition without touching the mouse.
+<p align="center">
+  <a href="#-key-features">Key Features</a> •
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-how-to-use">How to Use</a> •
+  <a href="#-technical-architecture">Architecture</a> •
+  <a href="#-test-suite">Test Suite</a> •
+  <a href="#-privacy--security">Privacy & Security</a>
+</p>
 
 ---
 
-## 🚀 Quick Start Guide
+## 📖 Overview
 
-### 1. Load the Unpacked Extension into Chrome
+**Quran Verse Identifier** is a browser extension that functions as a "Shazam for the Quran." Whenever a Quran recitation is playing inside any browser tab—such as **YouTube, YouTube Shorts, Instagram Reels, Facebook, TikTok, podcasts**, or even **live ambient room audio via microphone**—a single shortcut (<kbd>Alt</kbd> + <kbd>Q</kbd>) instantly captures, identifies, and enriches the recitation.
 
-1. Clone or download this repository to your local computer:
-   ```bash
-   git clone https://github.com/your-username/quran-recitation-verse-identifier.git
-   ```
-2. Open Google Chrome and navigate to:
-   ```text
-   chrome://extensions
-   ```
-3. Enable **Developer mode** toggle in the top-right corner.
-4. Click **Load unpacked** in the top-left corner.
-5. Select this project's folder (`quran-verse-identifier`).
-6. The extension **"Quran Verse Identifier - Recitation Shazam"** is now loaded and visible in your extensions list!
+Results are displayed in a sleek, draggable **Floating HUD** that renders authentic **Uthmani Arabic calligraphy**, verified translations in 13+ languages, **live continuous Ayah tracking**, and **simplified classical Tafsir reflections** with voice narration.
 
-### 2. Obtain a Free Google Gemini API Key
+> [!IMPORTANT]
+> **Lossless Unmuted Pass-Through:** Unlike standard tab audio capture implementations that mute playback while recording, this extension routes the stream through a custom `AudioContext.destination` loopback so your video audio **never mutes** in your headphones or speakers.
 
-1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey).
-2. Sign in with your Google account.
-3. Click **"Create API key"** and copy the generated key. (Gemini API provides free usage tier suitable for everyday use).
+---
 
-### 3. Configure API Key & Translation in Options
+## ✨ Key Features
 
-1. Click the Quran Verse Identifier icon in your Chrome toolbar, or right-click the extension icon and select **Options**.
-2. Paste your Google Gemini API key into the **Google Gemini API Key** field.
-3. Click **"Test API Key"** to verify that your key is active and connected.
-4. Choose your preferred Quran translation language and Gemini model.
-5. Click **Save Settings** (automatically saved to `chrome.storage.sync`).
+### 🎯 1. Instant Audio Identification
+- **Direct Multimodal Recognition:** Leverages **Google Gemini 3.8 Flash** multimodal audio understanding to match recitations directly from raw audio waveforms without reciter bias.
+- **Authentic Calligraphy:** Automatically queries the **Quran.com REST API v4** for verified Uthmani script (`text_uthmani`), Surah names, and ayah metadata.
+- **Smart Search Fallback:** If verse numbering is ambiguous, automatically recovers verse boundaries using Quran.com's text search engine.
+
+### 🌊 2. Continuous Ayah-by-Ayah Live Streaming
+- **Powered by Gemini 3.8 Flash Live:** Connects via bidirectional WebSockets (`models/gemini-3.8-live`) with continuous 16kHz linear PCM streaming.
+- **Real-Time Recitation Tracking:** Automatically detects when the Qari transitions to the next Ayah, updating the on-screen card in real-time as you listen.
+- **Pause & Resume Controls:** Seamlessly pause live following with a single click while keeping the card open.
+
+### 📚 3. Multi-Source Classical Tafsir & Everyday Reflections
+- **Parallel Classical Ingestion:** Concurrently pulls authentic commentaries from three classical works:
+  - 📜 **Tafsir Ibn Kathir** (Resource ID `169`)
+  - 📖 **Ma'arif al-Qur'an** by Mufti Muhammad Shafi (Resource ID `168`)
+  - 🌿 **Tazkirul Quran** by Maulana Wahiduddin Khan (Resource ID `817`)
+- **Accessible AI Synthesis:** Gemini synthesizes the scholarly commentaries into relatable, engaging takeaways with real-world analogies and stories across **three selectable depths**:
+  - **⚡ 60–90s Quick:** Spoken-pace summary with a vivid analogy or memorable story (~120–160 words).
+  - **📖 Detailed:** Historical revelation context (*Asbab al-Nuzul*), core spiritual themes, and practical daily actions (~250–350 words).
+  - **🏛️ Comprehensive Study:** Scholarly comparison blending historical, lingual, and theological perspectives (~450–600 words).
+- **Deep Classical Link:** Includes a direct one-click redirect to `https://quran.com/{surah}/{ayah}/tafsirs` for unabridged Arabic/English texts.
+
+### 🔊 4. Audio Reflections (Text-to-Speech)
+- **Built-in Narration:** Listen to synthesized Tafsirs read aloud with high-fidelity Web Speech API synthesis.
+- **Variable Speed Playback:** Toggle playback speed between `1.0x`, `1.25x`, and `1.5x`.
+- **Decoupled Pinning:** Pin and listen to the Tafsir of an earlier Ayah while live recitation streaming continues tracking in the background, with an interactive sync pill to jump back at any time.
+
+### 🎨 5. Isolated Shadow DOM Floating HUD
+- **Zero Style Interference:** Mounted inside a closed Shadow DOM container (`#quran-verse-hud-root`), completely immune to CSS overrides from host websites like YouTube or social platforms.
+- **Smooth Draggable Interface:** Freely move the card across the viewport with boundary clamping.
+- **Collapsible Mini-Pill:** Minimize the card to a floating ambient pill when you want an unobstructed view.
+- **One-Click Clipboard:** Easily copy the Arabic text and translation with formatted citation.
+
+### 🎧 6. Dual Input Capture
+- **Tab Audio Mode:** Captures clean internal browser audio from any playing video or audio tab.
+- **Microphone Mode:** Captures ambient room recitations, Taraweeh prayers, halaqahs, or mosque sound systems with one click.
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Google Chrome (or Chromium-based browser: Brave, Edge, Arc)
+- Free Google Gemini API Key from [Google AI Studio](https://aistudio.google.com/)
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/ehtsmulhq/quran-verse-identifier.git
+cd quran-verse-identifier
+```
+
+### Step 2: Install Dependencies & Run Tests
+```bash
+npm install
+npm test
+```
+
+### Step 3: Load into Google Chrome
+1. Open Google Chrome and navigate to `chrome://extensions`.
+2. Enable **Developer mode** using the toggle switch in the top-right corner.
+3. Click the **Load unpacked** button in the top-left corner.
+4. Select the `quran-verse-identifier` folder.
+5. The extension is now installed and active!
+
+### Step 4: Configure Your Gemini API Key
+1. Right-click the **Quran Verse Identifier** icon in your Chrome toolbar and select **Options** (or open extension settings).
+2. Paste your Google Gemini API key into the input field.
+3. Click **Test API Key** to verify connectivity.
+4. Select your preferred **Gemini Model** (default: `Gemini 3.8 Flash`) and **Translation Language** (default: English - Sahih International).
+5. Click **Save Settings**.
 
 ---
 
 ## 🎯 How to Use
 
-### 1. Identifying Verses in Videos (YouTube, Shorts, Reels, Podcasts)
+### Identifying Video Recitations (YouTube, Shorts, Reels)
+1. Open any video featuring a Quran recitation in Chrome.
+2. Press <kbd>Alt</kbd> + <kbd>Q</kbd> (or click the toolbar icon).
+3. The HUD will appear in the top-right corner in **Listening** mode.
+4. Within 3–5 seconds, the HUD transitions to **Matched**, displaying the Surah, Ayah, authentic Uthmani calligraphy, and translation.
 
-1. Open any video containing Quran recitation in Chrome:
-   - YouTube videos or YouTube Shorts
-   - Instagram Reels
-   - Facebook Reels or Facebook Watch
-   - TikTok or Islamic podcasts / lectures
-2. Press <kbd>Alt</kbd> + <kbd>Q</kbd> (or click the extension icon in the toolbar).
-3. The floating HUD appears in the top-right corner of the tab in **Listening** mode.
-4. The extension captures a brief audio sample while **keeping video audio playing smoothly** through your speakers.
-5. Within seconds, the HUD transitions to **Matched**, displaying:
-   - Surah Name and Ayah number (e.g., `Surah Al-Mulk (67:1)`)
-   - Complete Uthmani Arabic script
-   - Selected translation
-   - **Follow Live Recitation** button
-   - **Tafsir & Reflections** button
-   - **Copy** button to copy the Ayah text
-   - **Quran.com** link
+```text
++---------------------------------------------------------------+
+|  📖 Surah Al-Mulk (67:1)                              ✕  —  |
+|  تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ   |
+|  "Blessed is He in whose hand is dominion..."                 |
+|  [ ▶ Follow Live ]  [ 📖 Tafsir & Reflections ]  [ 📋 Copy ]   |
++---------------------------------------------------------------+
+```
 
-### 2. Following Live Recitation Ayah-by-Ayah
+### Following Live Continuous Recitations
+1. On any matched verse, click **▶ Follow Live Recitation**.
+2. A pulsing emerald badge (`● LIVE RECITATION`) will appear.
+3. As the reciter proceeds through consecutive verses, the card updates automatically in real-time.
+4. Click **⏸ Pause Live Following** to pause tracking.
 
-1. Once a verse is matched (or from the HUD), click **▶ Follow Live Recitation**.
-2. The HUD displays a pulsing emerald `● Live` badge.
-3. As the reciter continues through consecutive verses, the HUD automatically updates to the current Ayah in real time.
-4. Click **⏸ Pause Live Following** whenever you want to pause continuous tracking.
+### Reading and Listening to Tafsir
+1. Click **📖 Tafsir & Reflections** on any matched card.
+2. Select your desired reflection depth:
+   - **⚡ 60-90s Quick:** Fast, story-based analogy.
+   - **📖 Detailed:** Contextual revelation analysis and practical lessons.
+   - **🏛️ Comprehensive:** In-depth comparative scholarly study.
+3. Click **🔊 Listen to Tafsir** to hear the reflection narrated aloud with speed adjustment controls.
+4. If the live stream moves forward while you are reading, an indicator pill (`Live is at {surah}:{ayah} [Switch]`) appears so you can return whenever you are ready.
 
-### 3. Reading and Listening to Tafsir & Reflections
-
-1. Click **📖 Tafsir & Reflections** on any matched verse.
-2. The Tafsir drawer opens with 3 depth tabs:
-   - **⚡ 60-90s Quick**: A concise reflection with an engaging everyday analogy or story.
-   - **📖 Detailed**: Context of revelation (*Asbab al-Nuzul*) and key thematic lessons.
-   - **🏛️ Comprehensive**: Scholarly comparative insights from Ibn Kathir, Ma'arif al-Qur'an, and Tazkirul Quran.
-3. Click **🔊 Listen to Tafsir** to hear the reflections read aloud using high quality text-to-speech. Adjust playback speed between `1x`, `1.25x`, and `1.5x`.
-4. Click **View Full Classical Texts on Quran.com ↗** to read the complete unabridged classical commentaries directly on Quran.com.
-
-### 4. Identifying Ambient Room Recitations (Microphone Audio)
-
-1. When listening to live prayers, halaqahs, Taraweeh, or external speakers:
-2. Open any active browser tab and trigger the extension (<kbd>Alt</kbd> + <kbd>Q</kbd>).
-3. On the HUD, click the **Audio Source** switch to select **Microphone**.
-4. Grant Chrome permission to access your microphone if prompted.
-5. The extension records the ambient room recitation and identifies the verse immediately.
+### Identifying Ambient Room Audio (Microphone)
+1. In the HUD header, toggle the audio source from **Tab** to **Mic**.
+2. Grant microphone permissions when prompted by Chrome.
+3. The extension will record ambient audio from your microphone and identify the recitation.
 
 ---
 
-## 🏛️ Architecture & Technical Design
+## 🏛️ Technical Architecture
 
+The extension is designed around Chrome Manifest V3's security and background execution constraints:
+
+```mermaid
+flowchart TD
+    subgraph Host ["Host Webpage (YouTube, Reels, Shorts)"]
+        Media["Active Video / Audio Playback"]
+        ShadowRoot["Isolated Shadow DOM Root (#quran-verse-hud-root)"]
+        HUD["Draggable Floating HUD UI"]
+        ShadowRoot --> HUD
+    end
+
+    subgraph MV3 ["Background Service Worker (ESM)"]
+        SW["service-worker.js"]
+        Storage["chrome.storage.sync"]
+        LiveSession["Live Stream Session State"]
+    end
+
+    subgraph Offscreen ["Offscreen Document Context"]
+        OffscreenDoc["offscreen.js"]
+        Capture["chrome.tabCapture Stream"]
+        AudioNodes["AudioContext & Pass-Through Destination"]
+        PCM["16kHz Linear PCM Resampler"]
+    end
+
+    subgraph Cloud ["External AI & Cloud APIs"]
+        GeminiREST["Google Gemini REST API (3.8 Flash / 2.0 Flash)"]
+        GeminiWS["Gemini 3.8 Live WebSocket (wss://)"]
+        QuranAPI["Quran.com REST API v4"]
+        TafsirAPI["Quran.com Classical Tafsirs"]
+    end
+
+    %% Audio Pass-Through
+    Media -.->|"Captured Audio"| Capture
+    Capture --> AudioNodes
+    AudioNodes -->|"Unmuted Audio Loopback"| Media
+    AudioNodes --> PCM
+
+    %% Messaging
+    SW <-->|"Chrome Messaging"| HUD
+    SW <-->|"Chrome Messaging"| OffscreenDoc
+    SW <--> Storage
+    SW <--> LiveSession
+
+    %% Cloud Integration
+    SW -->|"Multimodal Audio Base64"| GeminiREST
+    PCM <-->|"Real-Time Audio Stream"| GeminiWS
+    SW -->|"Verse Lookup"| QuranAPI
+    SW -->|"Tafsir Fetch"| TafsirAPI
+    SW -->|"Tafsir Synthesis"| GeminiREST
 ```
-[ Active Web Tab ] <--------------------+
-       |                                |
-       | (Alt+Q / Toolbar Click)        | Injects Floating HUD (Shadow DOM)
-       v                                | Updates HUD States (Listening -> Analyzing -> Matched)
-[ Background Service Worker ]           |
-       |                                |
-       +---> [ Offscreen Document ]     |
-       |        | (tabCapture streamId) |
-       |        +-- AudioContext (Unmuted Loopback Destination)
-       |        +-- MediaRecorder / 16kHz PCM Streamer
-       |        v
-       +<-- Audio Buffer (5s) or PCM chunks
-       |
-       +---> [ Gemini 3.8 Flash Live / 3.8 Flash ]
-       |        v
-       |     Phonetic Arabic Transcription + Surah/Ayah Predictions
-       |
-       +---> [ Arabic Normalizer & Two-Stage Matcher ]
-       |        v (Word overlap verification & Quran.com text search rescue)
-       |
-       +---> [ Multi-Source Tafsir Engine ]
-       |        +-- Parallel Fetch: Ibn Kathir (169), Ma'arif (168), Tazkirul (817)
-       |        +-- Gemini Simplified Synthesis (Story & Analogy)
-       |        v
-       +--------------------------------+
-```
 
-### Module Breakdown
+### Core Components
 
-| Module | Location | Purpose |
-| :--- | :--- | :--- |
-| **Manifest V3** | [`manifest.json`](manifest.json) | Declares permissions (`activeTab`, `tabCapture`, `offscreen`, `storage`, `scripting`), keyboard command `Alt+Q`, and extension metadata. |
-| **Service Worker** | [`src/background/service-worker.js`](src/background/service-worker.js) | Central hub orchestrating offscreen capture, live Ayah streaming, Tafsir generation, and HUD state updates. |
-| **Offscreen Capture** | [`src/offscreen/offscreen.js`](src/offscreen/offscreen.js) | Captures `tabCapture` & mic streams, maintains unmuted Web Audio loopback, and streams audio data. |
-| **Live WebSocket Engine** | [`src/services/gemini-live.js`](src/services/gemini-live.js) | Manages bidirectional WebSockets with Gemini 3.8 Flash Live for continuous real-time verse tracking. |
-| **Arabic Normalizer** | [`src/services/arabic-normalizer.js`](src/services/arabic-normalizer.js) | Strips Tashkeel, normalizes Hamza and Alif variants, and calculates authentic text word overlap. |
-| **Matcher Coordinator** | [`src/services/matcher.js`](src/services/matcher.js) | Coordinates two-stage verification, Surah lock-in, and Quran.com search fallback rescue. |
-| **Tafsir API & Synthesis** | [`src/services/tafsir-api.js`](src/services/tafsir-api.js) | Concurrently ingests 3 classical commentaries and synthesizes 3 depth tiers with relatable analogies. |
-| **Floating HUD** | [`src/ui/floating-hud.js`](src/ui/floating-hud.js) | Isolated Shadow DOM user interface with draggable header, live streaming controls, Tafsir drawer, and TTS player. |
-| **Options Page** | [`src/options/options.js`](src/options/options.js) | User settings UI for API key verification, model selection, and translation preferences. |
+| Component | Path | Description |
+|---|---|---|
+| **Service Worker** | [`src/background/service-worker.js`](src/background/service-worker.js) | Central event coordinator managing audio capture triggers, API calls, and HUD state transitions. |
+| **Offscreen Capture** | [`src/offscreen/offscreen.js`](src/offscreen/offscreen.js) | Captures tab/mic audio, routes unmuted pass-through to `audioContext.destination`, and resamples to 16kHz PCM. |
+| **Floating HUD** | [`src/ui/floating-hud.js`](src/ui/floating-hud.js) | Isolated Shadow DOM user interface with dragging, live streaming badge, Tafsir drawer, and TTS player. |
+| **HUD Stylesheet** | [`src/ui/floating-hud.css`](src/ui/floating-hud.css) | Scoped CSS variables and keyframe animations (radar pulse, spinner, live status). |
+| **Gemini AI Engine** | [`src/services/gemini.js`](src/services/gemini.js) | Sends multimodal audio to Gemini REST API and handles prompt engineering for Tafsir synthesis. |
+| **Gemini Live Stream** | [`src/services/gemini-live.js`](src/services/gemini-live.js) | Bidirectional WebSocket client connecting to `models/gemini-3.8-live` for streaming Ayah identification. |
+| **Quran.com Client** | [`src/services/quran-api.js`](src/services/quran-api.js) | Fetches verified Uthmani calligraphy, verse keys, translations, and handles multi-verse spans. |
+| **Classical Tafsir Client** | [`src/services/tafsir-api.js`](src/services/tafsir-api.js) | Concurrently ingests Ibn Kathir, Ma'arif al-Qur'an, and Tazkirul Quran commentaries. |
+| **Arabic Normalizer** | [`src/services/arabic-normalizer.js`](src/services/arabic-normalizer.js) | Normalizes Arabic orthography, strips Tashkeel, and computes text overlap ratios. |
+| **Options Manager** | [`src/options/options.js`](src/options/options.js) | Settings UI for API key validation, model selection, and language preference storage. |
 
 ---
 
-## 🧪 Testing & Verification
+## 🧪 Test Suite
 
-The project includes an extensive Vitest unit test suite covering 100% of core business logic, audio pipelines, UI state transitions, and Chrome extension messaging.
+The project adheres to strict **Test-Driven Development (TDD)** with 100% pass rates across all functional units:
 
-### Running Tests
+```text
+✓ tests/manifest.test.js (4 tests)
+✓ tests/services/arabic-normalizer.test.js (5 tests)
+✓ tests/services/tafsir-api.test.js (4 tests)
+✓ tests/services/quran-api.test.js (9 tests)
+✓ tests/services/gemini.test.js (17 tests)
+✓ tests/services/gemini-live.test.js (4 tests)
+✓ tests/offscreen/offscreen.test.js (16 tests)
+✓ tests/background/service-worker.test.js (21 tests)
+✓ tests/services/matcher.test.js (7 tests)
+✓ tests/options/options.test.js (9 tests)
+✓ tests/ui/floating-hud.test.js (30 tests)
 
-Ensure project dependencies are installed:
-```bash
-npm install
+Test Files  11 passed (11)
+     Tests  126 passed (126)
 ```
 
-Run the Vitest test suite:
+Run test suite locally:
 ```bash
 npm test
 ```
 
-### Test Suite Structure
-
-```
-tests/
-├── background/
-│   └── service-worker.test.js   # Service worker message routing, streaming sessions, Tafsir dispatch (21 tests)
-├── offscreen/
-│   └── offscreen.test.js        # Tab capture, mic capture, AudioContext loopback, PCM streaming (16 tests)
-├── ui/
-│   └── floating-hud.test.js     # Shadow DOM isolation, drag gestures, streaming controls, Tafsir drawer, TTS (30 tests)
-├── services/
-│   ├── arabic-normalizer.test.js# Tashkeel removal, Hamza normalization, word overlap ratio (5 tests)
-│   ├── gemini.test.js           # Multimodal prompt format, JSON schema parsing, Tafsir prompt synthesis (18 tests)
-│   ├── gemini-live.test.js      # Gemini 3.8 Flash Live WebSocket session, PCM message framing (4 tests)
-│   ├── quran-api.test.js        # Quran.com REST API endpoints, Uthmani text, caching (9 tests)
-│   ├── tafsir-api.test.js       # Multi-source parallel ingestion (Ibn Kathir, Ma'arif, Tazkirul) (4 tests)
-│   └── matcher.test.js          # Two-stage verification, Surah lock-in, search fallback rescue (9 tests)
-├── options/
-│   └── options.test.js          # API key persistence, model selection, connectivity probe (9 tests)
-└── manifest.test.js             # MV3 manifest validity, icon PNG signatures, referenced paths (4 tests)
+Run tests in watch mode:
+```bash
+npm run test:watch
 ```
 
-**Total: 129 passing tests across 11 suites** ✅
+---
+
+## ⌨️ Shortcuts & Controls
+
+| Shortcut / Control | Location | Action |
+|---|---|---|
+| <kbd>Alt</kbd> + <kbd>Q</kbd> | Global Browser | Trigger recitation identification in the active tab. |
+| **Tab / Mic Switch** | HUD Header | Toggle between internal tab audio and room microphone. |
+| **▶ Follow Live** | Matched Card | Start continuous Ayah-by-Ayah recitation tracking. |
+| **⏸ Pause Live** | Matched Card | Pause continuous live recitation tracking. |
+| **📖 Tafsir** | Matched Card | Open the multi-depth classical Tafsir drawer. |
+| **🔊 Listen** | Tafsir Drawer | Play reflection via text-to-speech with speed controls. |
+| **1x / 1.25x / 1.5x** | TTS Player | Cycle audio narration playback speed. |
+| **📋 Copy** | Matched Card | Copy Arabic verse and translation to clipboard. |
+| **— (Minimize)** | HUD Header | Collapse card into an ambient draggable pill. |
+| **✕ (Close)** | HUD Header | Dismiss the floating HUD. |
 
 ---
 
 ## 🔒 Privacy & Security
 
-- **Ephemeral Audio Buffering**: Audio recorded during recognition is buffered in memory only during active identification, sent directly over TLS/HTTPS or secure WebSockets to Google Gemini API, and discarded immediately. No audio is ever recorded continuously without user intent, saved to disk, or sent to third-party tracking servers.
-- **Local Credentials**: Your Google Gemini API key is stored securely on your browser via `chrome.storage.sync` and is never exposed to external web pages.
-- **Isolated Shadow DOM**: Injected styles and elements exist exclusively within a closed Shadow DOM container, preventing host page scripts or trackers from altering or reading extension UI data.
+- **Ephemeral Audio Processing:** Recorded audio is held in memory only for the duration of the recognition request and is streamed directly over encrypted TLS/HTTPS or WSS to Google's API endpoints. No audio recordings are ever written to disk or sent to third-party tracking servers.
+- **Client-Side Secret Storage:** Your Google Gemini API key is stored strictly within your personal `chrome.storage.sync` profile and is never exposed to host webpages or external third parties.
+- **DOM Isolation:** Injected HUD styles and scripts operate inside an isolated Shadow DOM (`mode: 'open'`), preventing any host website script from inspecting or reading your Quran study session.
 
 ---
 
-## 📜 License
+## 📄 License
 
-MIT License. Designed and engineered for the benefit of the global Muslim community and Quran learners worldwide.
-
+This project is licensed under the [MIT License](LICENSE). Built for the global Muslim community, students of knowledge, and Quran lovers worldwide.
