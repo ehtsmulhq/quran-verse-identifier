@@ -217,38 +217,6 @@ flowchart TD
 | **Options Manager** | [`src/options/options.js`](src/options/options.js) | Settings UI for API key validation, model selection, and language preference storage. |
 
 ---
-
-## 🧪 Test Suite
-
-The project adheres to strict **Test-Driven Development (TDD)** with 100% pass rates across all functional units:
-
-```text
-✓ tests/manifest.test.js (4 tests)
-✓ tests/services/arabic-normalizer.test.js (5 tests)
-✓ tests/services/tafsir-api.test.js (4 tests)
-✓ tests/services/quran-api.test.js (9 tests)
-✓ tests/services/gemini.test.js (17 tests)
-✓ tests/services/gemini-live.test.js (4 tests)
-✓ tests/offscreen/offscreen.test.js (16 tests)
-✓ tests/background/service-worker.test.js (21 tests)
-✓ tests/services/matcher.test.js (7 tests)
-✓ tests/options/options.test.js (9 tests)
-✓ tests/ui/floating-hud.test.js (30 tests)
-
-Test Files  11 passed (11)
-     Tests  126 passed (126)
-```
-
-Run test suite locally:
-```bash
-npm test
-```
-
-Run tests in watch mode:
-```bash
-npm run test:watch
-```
-
 ---
 
 ## ⌨️ Shortcuts & Controls
